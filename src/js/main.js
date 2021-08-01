@@ -56,8 +56,10 @@ var stockTrendApp = new Vue({
             fill: false,
         },
 
-        stock_trend_result_ratio: [],
-        stock_trend_result: [],
+        tsl_stock_trend_result_ratio: [],
+        tsl_stock_trend_result: [],
+        otc_stock_trend_result_ratio: [],
+        otc_stock_trend_result: [],
         chartOptions: {
             responsive: true,
             maintainAspectRatio: false
@@ -70,6 +72,18 @@ var stockTrendApp = new Vue({
         loader.open();
         this.get_stock_trend_data('tsl')
             .then(resp => {
+                this.tsl_stock_trend_result_ratio = resp[0];
+                this.tsl_stock_trend_result = resp[1];
+                loader.close();
+            })
+            .catch(err => {
+                console.error(err);
+            });
+
+        this.get_stock_trend_data('otc')
+            .then(resp => {
+                this.otc_stock_trend_result_ratio = resp[0];
+                this.otc_stock_trend_result = resp[1];
                 loader.close();
             })
             .catch(err => {
@@ -79,6 +93,8 @@ var stockTrendApp = new Vue({
     methods: {
         get_stock_trend_data(type){
             let api_filter_config = '';
+            let config_ratio_obj = {};
+            let data_config = {};
 
             // choose data config
             if(type === 'tsl'){
@@ -86,15 +102,17 @@ var stockTrendApp = new Vue({
             }else if(type === 'otc'){
                 api_filter_config = otc_category_id_list;
             }
+            config_ratio_obj = this.data_config_obj_ratio;
+            data_config = this.data_config_obj;
 
             // get data
             try{
                 let requests = this.create_api_requests(api_filter_config);
                 return axios.all(requests).then(axios.spread((...responses) => {
-                    this.stock_trend_result_ratio = this.arrange_row_data_from_api(responses, api_filter_config, this.data_config_obj_ratio);
-                    this.stock_trend_result = this.arrange_row_data_from_api(responses, api_filter_config, this.data_config_obj);
+                    let stock_trend_result_ratio = this.arrange_row_data_from_api(responses, api_filter_config, config_ratio_obj);
+                    let stock_trend_result = this.arrange_row_data_from_api(responses, api_filter_config, data_config);
 
-                    return this.stock_trend_result;
+                    return [stock_trend_result_ratio, stock_trend_result];
                 }))
                 .catch(err => {
                     console.error(err);
