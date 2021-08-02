@@ -28,7 +28,7 @@
 
             <div class="row mx-0" style="height: 500px;">
                 <div v-if="tsl_stock_trend_result_ratio.length" class="col-md-6">
-                    <div>上市類股資金流向率(%)</div>
+                    <div>上市類股成交比重(%)</div>
                     <line-chart :labels="tsl_stock_trend_result_ratio[0].x" :datasets="tsl_stock_trend_result_ratio"></line-chart>
                 </div>
     
@@ -37,7 +37,7 @@
                     <line-chart :labels="tsl_stock_trend_result[0].x" :datasets="tsl_stock_trend_result"></line-chart>
                 </div>
                 <div v-if="otc_stock_trend_result_ratio.length" class="col-md-6">
-                    <div>上櫃類股資金流向率(%)</div>
+                    <div>上櫃類股成交比重(%)</div>
                     <line-chart :labels="otc_stock_trend_result_ratio[0].x" :datasets="otc_stock_trend_result_ratio"></line-chart>
                 </div>
     
